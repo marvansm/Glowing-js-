@@ -8,6 +8,10 @@ function SwiperVariants(swiperName, PerView, space) {
       nextEl: ".swiper-button-next",
       prevEl: ".swiper-button-prev",
     },
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
     slidesPerView: PerView,
     spaceBetween: space,
     loop: true,
