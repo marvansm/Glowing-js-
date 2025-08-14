@@ -2,7 +2,7 @@ const PRODUCT_WRAPPER = document.querySelector("#productWrapper");
 const NAVBAR_WRAPPER = document.querySelector("#navbarWrapper");
 const FAV_PR_WRAPPER = document.querySelector("#favPrWrapper");
 
-function SwiperVariants(swiperName, PerView, space) {
+function SwiperVariants(swiperName, PerView, space, breakpoints) {
   return new Swiper(swiperName, {
     navigation: {
       nextEl: ".swiper-button-next",
@@ -12,13 +12,20 @@ function SwiperVariants(swiperName, PerView, space) {
       delay: 3000,
       disableOnInteraction: false,
     },
+    breakpoints: breakpoints,
     slidesPerView: PerView,
     spaceBetween: space,
     loop: true,
   });
 }
 SwiperVariants(".mySwiper", 1, 0);
-SwiperVariants(".productSwiper", 4, 30);
+SwiperVariants(".productSwiper", 4, 30, {
+  0: { slidesPerView: 1, spaceBetween: 10 },
+  640: { slidesPerView: 2, spaceBetween: 15 },
+  768: { slidesPerView: 3, spaceBetween: 20 },
+  1024: { slidesPerView: 4, spaceBetween: 30 },
+  1280: { slidesPerView: 4, spaceBetween: 40 },
+});
 
 const productFactory = () => {
   const products = [
@@ -93,7 +100,7 @@ const productFactory = () => {
     .map(
       (item) => `
       <div class="swiper-slide">
-        <div class="box flex flex-col items-center justify-center bg-white">
+        <div  class="box flex flex-col items-center justify-center bg-white">
           <div class="boxImg relative group overflow-hidden">
             <img src="${item?.image}" alt="${item?.title}"
               class="transition-opacity duration-300 w-full h-full object-cover" />
@@ -342,35 +349,36 @@ const navBarRendering = () => {
     },
   ];
 
-  const renderNavBarHTML = ` <nav class="container max-w-[1860px] px-[1.875rem] mx-auto">
-        <div class="flex items-center justify-between">
-          <div class="left w-[50%]">
-            <ul
-              class="items-center flex text-[14px] leading-[25px] tracking-[1.4px] font-semibold gap-[35px]"
-            >
-                      ${menuItems
-                        .map(
-                          (item) =>
-                            `<li>${item?.name} <i class="ri-arrow-down-s-line"></i></li>`
-                        )
-                        .join("")}
-           
-            </ul>
-          </div>
-          <div class="center">
-            <img
-              src="https://glowing-theme.myshopify.com/cdn/shop/files/logo-dark.png?v=1736504155"
-              alt=""
-              class="max-w-[190px] py-[20px] h-auto object-contain"
-            />
-          </div>
-          <div class="right w-[50%] flex items-end justify-end">
-            <ul class="text-black flex items-center gap-[24px]">
-       ${iconItems.map((icon) => `<li>${icon?.icon}</li>`).join("")}
-            </ul>
-          </div>
-        </div>
-      </nav>`;
+  const renderNavBarHTML = ` <nav class="container max-w-[1860px] px-[1.875rem] mx-auto " >
+  <div class="flex items-center justify-between py-3">
+    <div class="flex items-center gap-4 w-[50%]">
+      <button id="menu-toggle" class="xl:hidden text-black text-2xl"><i class="ri-menu-line"></i></button>
+      <ul class="hidden xl:flex text-[14px] tracking-[1.4px] font-semibold gap-[35px]">
+        ${menuItems
+          .map((item) => `<li><a href="${item.path}">${item.name}</a></li>`)
+          .join("")}
+      </ul>
+    </div>
+    <div class="flex justify-center ">
+      <img src="https://glowing-theme.myshopify.com/cdn/shop/files/logo-dark.png?v=1736504155"
+        alt="Logo"
+        class="max-w-[190px] h-auto object-contain" />
+    </div>
+    <div class="flex items-end justify-end gap-[24px] w-[50%]">
+      <div class="flex xl:hidden gap-4">
+        ${iconItems
+          .filter((icon) => icon.name === "Search" || icon.name === "Cart")
+          .map((icon) => icon.icon)
+          .join("")}
+      </div>
+      <ul class="hidden xl:flex gap-[24px]">
+        ${iconItems.map((icon) => `<li>${icon.icon}</li>`).join("")}
+      </ul>
+    </div>
+  </div>
+</nav>
+`;
+
   NAVBAR_WRAPPER.innerHTML = renderNavBarHTML;
 };
 navBarRendering();
