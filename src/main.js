@@ -1,3 +1,6 @@
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 const PRODUCT_WRAPPER = document.querySelector("#productWrapper");
 const NAVBAR_WRAPPER = document.querySelector("#navbarWrapper");
 const FAV_PR_WRAPPER = document.querySelector("#favPrWrapper");
@@ -99,8 +102,8 @@ const productFactory = () => {
   const swipperProduct = products
     .map(
       (item) => `
-      <div class="swiper-slide">
-        <div  class="box flex flex-col items-center justify-center bg-white">
+      <div class="swiper-slide" >
+        <div  class="box flex flex-col items-center justify-center bg-white" data-aos="flip-left">
           <div class="boxImg relative group overflow-hidden">
             <img src="${item?.image}" alt="${item?.title}"
               class="transition-opacity duration-300 w-full h-full object-cover" />
@@ -194,7 +197,7 @@ const productFactory = () => {
   const productHtml = products
     .map(
       (item) => `
-        <div class="box flex flex-col items-center justify-center bg-white">
+        <div class="box flex flex-col items-center justify-center bg-white" data-aos="flip-left">
           <div class="boxImg relative group overflow-hidden">
             <img src="${item?.image}" alt="${item?.title}"
               class="transition-opacity duration-300 w-full h-full object-cover" />
@@ -349,22 +352,34 @@ const navBarRendering = () => {
     },
   ];
 
-  const renderNavBarHTML = ` <nav class="container max-w-[1860px] px-[1.875rem] mx-auto " >
+  const renderNavBarHTML = ` <nav class="container max-w-[1860px] px-[1.875rem] mx-auto" >
   <div class="flex items-center justify-between py-3">
-    <div class="flex items-center gap-4 w-[50%]">
+  <div class="flex items-center gap-4 w-full xl:w-[50%]">
       <button id="menu-toggle" class="xl:hidden text-black text-2xl"><i class="ri-menu-line"></i></button>
-      <ul class="hidden xl:flex text-[14px] tracking-[1.4px] font-semibold gap-[35px]">
-        ${menuItems
-          .map((item) => `<li><a href="${item.path}">${item.name}</a></li>`)
-          .join("")}
-      </ul>
+      
+
+<ul class="hidden xl:flex text-[14px] tracking-[1.4px] font-semibold gap-[35px]">
+  ${menuItems
+    .map(
+      (item) =>
+        `<li class="group relative overflow-hidden">
+          <a href="${item.path}" class="relative z-10 inline-block">
+            ${item.name} <i class="ri-arrow-down-s-line"></i>
+          </a>
+          <span class="absolute left-0 bottom-0 h-[1px] w-0 bg-black transition-all duration-400 ease-out group-hover:w-full"></span>
+        </li>`
+    )
+    .join("")}
+</ul>
+
     </div>
     <div class="flex justify-center ">
       <img src="https://glowing-theme.myshopify.com/cdn/shop/files/logo-dark.png?v=1736504155"
         alt="Logo"
         class="max-w-[190px] h-auto object-contain" />
     </div>
-    <div class="flex items-end justify-end gap-[24px] w-[50%]">
+    
+<div class="flex items-end justify-end gap-[24px] w-full xl:w-[50%]">
       <div class="flex xl:hidden gap-4">
         ${iconItems
           .filter((icon) => icon.name === "Search" || icon.name === "Cart")
@@ -380,5 +395,13 @@ const navBarRendering = () => {
 `;
 
   NAVBAR_WRAPPER.innerHTML = renderNavBarHTML;
+
 };
 navBarRendering();
+
+AOS.init({
+  duration: 1000,
+  once: false,
+  easing: "ease-in-out",
+  disable: "mobile",
+});
